@@ -164,6 +164,7 @@ clockintr()
 {
   acquire(&tickslock);
   ticks++;
+  printf("DEBUG: tick value = %d \n", ticks);
   wakeup(&ticks);
   release(&tickslock);
 }
