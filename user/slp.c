@@ -3,7 +3,6 @@
 #include "kernel/fcntl.h"
 #include "user/user.h"
 
-//#define SLEEPTICKS 30
 #define IOCOUNT 50
 
 int main()
@@ -36,7 +35,6 @@ int main()
                 pid = wait((int *) 0);
                 printf("I'm child 1. I see my child with pid %d is done with I/O and exited\n", cpid);
                 printf("Now I'm going to sleep for a while!\n");
-//                sleep(SLEEPTICKS);
                 while(count < 10){
                     for(int i =1; i<1000000000; i++){
 
@@ -49,13 +47,6 @@ int main()
             else if(cpid == 0)
             {
                 printf("I'm child 2: Going to do a heavy file I/O operation\n");
-//                // Going to do a heavy I/O operation
-//                int fd1 = open("testfile", O_CREATE|O_WRONLY|O_TRUNC);
-//                for(int i = 0; i < IOCOUNT; i++)
-//                {
-//                    write(fd1, "I'm writing into a testfile.", 29);
-//                }
-//                close(fd1);
                 int count =0;
                 while(count < 10){
                     for(int i =1; i<1000000000; i++){

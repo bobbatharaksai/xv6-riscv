@@ -164,6 +164,7 @@ clockintr()
 {
   acquire(&tickslock);
   ticks++;
+  printf("DEBUG: updateTimerInterval:: runCount: %d, totCount: %d\n", countRunnableProcs(), countProcess());
   printf("DEBUG: tick value = %d \n", ticks);
   wakeup(&ticks);
   release(&tickslock);
