@@ -374,6 +374,7 @@ exit(int status)
   release(&wait_lock);
 
   // Jump into the scheduler, never to return.
+  printf("DEBUG: Process completed pid: %d, ticks: %d\n", p->pid, ticks);
   sched();
   panic("zombie exit");
 }
@@ -453,6 +454,8 @@ scheduler(void)
         // before jumping back to us.
         p->state = RUNNING;
         c->proc = p;
+        // printf("DEBUG: timer_scratch[]")
+        // REG = clock_value;
         swtch(&c->context, &p->context);
 
         // Process is done running for now.
@@ -629,7 +632,7 @@ either_copyin(void *dst, int user_src, uint64 src, uint64 len)
 // Print a process listing to console.  For debugging.
 // Runs when user types ^P on console.
 // No lock to avoid wedging a stuck machine further.
-void
+int
 procdump(void)
 {
   static char *states[] = {
@@ -643,6 +646,7 @@ procdump(void)
   char *state;
 
   printf("\n");
+  int run_count = 0;
   for(p = proc; p < &proc[NPROC]; p++){
     if(p->state == UNUSED)
       continue;
@@ -652,5 +656,29 @@ procdump(void)
       state = "???";
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
+    if ((p->state == 3) || (p->state == 4)) ++run_count;
   }
+  return run_count;
+}
+
+
+int
+countRunnableProcs(void)
+{
+  struct proc *p;
+  int run_count = 0;
+  for(p = proc; p < &proc[NPROC]; ++p)
+    if ((p->state == 3) || (p->state == 4)) ++run_count;
+  return run_count;
+}
+
+
+int 
+countProcess(void) {
+  struct proc *p;
+  int count = 0;
+  for(p = proc; p < &proc[NPROC]; ++p)
+    if (p->state != 0) ++count;
+  return count;
+
 }
